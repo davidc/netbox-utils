@@ -1,0 +1,6 @@
+vm_audit.py
+Lists VMs that are in Netbox but not in vCenter
+Lists VMs that are in vCenter but not in Netbox
+vlans that don't match the vlan on the interface in netbox 
+
+dns_update.py
