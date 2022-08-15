@@ -110,8 +110,9 @@ class ZonesGenerator:
         addresses = self.netbox.ipam.ip_addresses.all()
         for nb_address in addresses:
             dns_name = nb_address.dns_name
-            address: ipaddress._BaseAddress = ipaddress.ip_interface(nb_address.address).ip
-            self._add_host_records(address, dns_name)
+            if dns_name:
+                address: ipaddress._BaseAddress = ipaddress.ip_interface(nb_address.address).ip
+                self._add_host_records(address, dns_name)
 
     def _add_host_records(self, address: ipaddress._BaseAddress, dns_name: str):
         name: dns.name.Name = dns.name.from_text(dns_name)
