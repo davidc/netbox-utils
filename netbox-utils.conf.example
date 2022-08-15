@@ -1,0 +1,3 @@
+[DEFAULT]
+api = https://netbox.mydomain.net
+token = 1234567890abcdef1234567890abcdef12345678
