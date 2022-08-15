@@ -5,8 +5,9 @@ from configparser import ConfigParser
 import click
 import pynetbox
 from click import Context
+from pynetbox.core.api import Api
 
-from netbox_utils import secrets
+from netbox_utils import secrets, nbdns
 
 
 def load_config(config_file) -> ConfigParser:
@@ -35,7 +36,7 @@ def load_config(config_file) -> ConfigParser:
     return ConfigParser()
 
 
-def get_api(config, verbose=False):
+def get_api(config, verbose=False) -> Api:
     nb = pynetbox.api(config['api'], config['token'],
                       private_key=config['private_key'] if 'private_key' in config else None,
                       private_key_file=config['private_key_file'] if 'private_key_file' in config else None
@@ -78,5 +79,5 @@ def shell(ctx: Context):
     import code
     code.interact(local={'nb': ctx.obj['netbox']}, banner="Netbox API is in 'nb' object", exitmsg='')  # local=locals())
 
-for command in secrets.COMMANDS:
+for command in secrets.COMMANDS + nbdns.COMMANDS:
     cli.add_command(command)

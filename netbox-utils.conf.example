@@ -1,3 +1,13 @@
 [DEFAULT]
 api = https://netbox.mydomain.net
 token = 1234567890abcdef1234567890abcdef12345678
+; private_key =
+; private_key_file =
+soa_mname = ns1.mydomain.net
+soa_rname = noc.mydomain.net
+soa_refresh = 3600
+soa_retry = 120
+soa_expire = 14400
+ttl = 300
+ns_list = ns1.mydomain.net,ns2.mydomain.net
+forward_domains = mydomain.net,mydomain.co.uk

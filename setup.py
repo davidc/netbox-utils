@@ -16,6 +16,8 @@ setup(
         'pynetbox',
         'napalm',
         'prompt_toolkit',
+        'dnspython',
+        'PyYaml',
     ],
     entry_points={
         'console_scripts': [
