@@ -2,14 +2,11 @@
 
 import argparse
 import netboxutil
-from pprint import pprint
-import atexit
 import os
-import readline
 import ipaddress
 import socket
 
-parser = argparse.ArgumentParser(description='Connect to Netbox API for interactive use.')
+parser = argparse.ArgumentParser(description='Import interfaces.')
 netboxutil.add_default_args(parser)
 
 args = parser.parse_args()
