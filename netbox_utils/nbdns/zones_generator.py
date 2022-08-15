@@ -103,9 +103,9 @@ class ZonesGenerator:
                 self.reverse_zones[supernet] = zone
 
         for zone_name in forward_domains: #self.FWD_DOMAINS:
-            zone = dns.zone.Zone(zone_name)
+            zone = dns.zone.Zone(zone_name + '.')
             self._add_soa_and_ns(zone)
-            self.zones[zone_name] = zone
+            self.zones[zone_name + '.'] = zone
 
         addresses = self.netbox.ipam.ip_addresses.all()
         for nb_address in addresses:
@@ -192,6 +192,18 @@ class ZonesGenerator:
             print('Validation failed, aborting', file=sys.stderr)
             sys.exit(1)
 
+    def add_dns_extras(self, extra_file):
+        # Add extras
+        with open(extra_file, 'r') as f:
+            dns_extra = yaml.safe_load(f)
+
+        for zone_name, records in dns_extra.items():
+            zone = self.zones[zone_name + '.']
+            for record in records:
+                rrsets = dns.zonefile.read_rrsets(record, rdclass=None, default_ttl=self._ttl, origin=zone.origin)
+                for rrset in rrsets:
+                    zone.replace_rdataset(rrset.name, rrset)
+
 
 class EmfZonesGenerator(ZonesGenerator):
     SOA_NS = 'ns1.emfcamp.org'
@@ -202,7 +214,7 @@ class EmfZonesGenerator(ZonesGenerator):
 
     TTL = 1 * 60 * 60  # 1 hour
 
-    FWD_DOMAINS = ['gchq.org.uk.', 'emf.camp.']
+    FWD_DOMAINS = ['gchq.org.uk', 'emf.camp']
 
     SIGNED_ZONES = ['emf.camp']
 
@@ -250,7 +262,7 @@ class EmfZonesGenerator(ZonesGenerator):
         super().generate_zones(self.FWD_DOMAINS)
 
         self._add_dhcp_hostnames()
-        self._add_dns_extras()
+        self.add_dns_extras('dns-extra.yaml')
 
     def _pretty_hostname_ipv4(self, address: ipaddress.IPv4Address, domain: str) -> str:
         if domain == self.domain_orga:
@@ -269,17 +281,6 @@ class EmfZonesGenerator(ZonesGenerator):
             codename2 = self.codenames[code2]
             self.codenamepos += 1
             return codename1 + "-" + codename2
-
-    def _add_dns_extras(self):
-        # Add extras
-        with open('dns-extra.yaml', 'r') as f:
-            dns_extra = yaml.safe_load(f)
-        for zone_name, records in dns_extra.items():
-            zone = self.zones[zone_name + '.']
-            for record in records:
-                rrsets = dns.zonefile.read_rrsets(record, rdclass=None, default_ttl=self.TTL, origin=zone.origin)
-                for rrset in rrsets:
-                    zone.replace_rdataset(rrset.name, rrset)
 
     def _is_zone_signed(self, zone: dns.zone.Zone) -> bool:
         zone_name = zone.origin.to_text(omit_final_dot=True)

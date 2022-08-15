@@ -12,8 +12,10 @@ def dns():
 
 
 @dns.command()
+@click.option('--extra', '-e', 'extra_file',
+              help='YAML file containing additional DNS records to add.')
 @click.pass_context
-def generate(ctx: Context):
+def generate(ctx: Context, extra_file=None):
     if not os.path.exists('out'):
         os.mkdir('out')
     if not os.path.exists('out/zones'):
@@ -34,6 +36,8 @@ def generate(ctx: Context):
     print("Generating zones")
 
     zonegen.generate_zones(ctx.obj['config']['forward_domains'].split(','))
+    if extra_file:
+        zonegen.add_dns_extras(extra_file)
 
     print("Outputting zones")
 
