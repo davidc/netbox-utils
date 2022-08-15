@@ -208,7 +208,7 @@ class EmfZonesGenerator(ZonesGenerator):
 
     NS_LIST = ['ns1.emfcamp.org.', 'auth1.ns.sargasso.net.', 'auth2.ns.sargasso.net.', 'auth3.ns.sargasso.net.']
 
-    codenames: list[str] = []
+    codenames: List[str] = []
     codenamepos: int = 0
 
     def __init__(self, netbox: Api, config: ConfigParser):
