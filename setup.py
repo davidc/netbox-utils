@@ -18,6 +18,7 @@ setup(
         'prompt_toolkit',
         'dnspython',
         'PyYaml',
+        'validators',
     ],
     entry_points={
         'console_scripts': [

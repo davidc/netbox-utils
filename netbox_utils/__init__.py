@@ -7,7 +7,7 @@ import pynetbox
 from click import Context
 from pynetbox.core.api import Api
 
-from netbox_utils import secrets, nbdns
+from netbox_utils import secrets, nbdns, nbip
 
 
 def load_config(config_file) -> ConfigParser:
@@ -79,5 +79,5 @@ def shell(ctx: Context):
     import code
     code.interact(local={'nb': ctx.obj['netbox']}, banner="Netbox API is in 'nb' object", exitmsg='')  # local=locals())
 
-for command in secrets.COMMANDS + nbdns.COMMANDS:
+for command in secrets.COMMANDS + nbdns.COMMANDS + nbip.COMMANDS:
     cli.add_command(command)
